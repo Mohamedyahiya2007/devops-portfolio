@@ -1,0 +1,16 @@
+name: Portfolio Deploy
+on:
+  push:
+    branches: [ main ]
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v3
+      - name: Delete Old Container
+        run: sudo docker rm -f portfolio-container || true
+      - name: Build Image
+        run: sudo docker build -t portfolio-image .
+      - name: Run Container
+        run: sudo docker run -d -p 80:80 --name portfolio-container portfolio-image
